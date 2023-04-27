@@ -24,7 +24,10 @@
             <form id="to-do-add">
                 <div class="input-group mb-4">
                     <div class="input-group-prepend">
-                        <button class="btn btn-outline-success" type="button" id="button-addon1" title="Adicionar" onclick="saveTodo()"><i class="fa fa-plus"></i></button>
+                        <button class="btn btn-outline-success" type="button" id="button-addon1" title="Adicionar" onclick="saveTodo()"><i id=icoplus class="fa fa-plus"></i></button>
+                    <div id="hidden-button-edit">   
+                        <button class="btn btn-outline-primary" type="button" id="button-addon2" title="Adicionar" onclick="saveTodo()"><i id=icoplus class="fa fa-plus"></i></button>
+                    </div> 
                     </div>
                         <input type="text" class="form-control" placeholder="Adicionar tarefa" id="to-do-input" aria-label="Example text with button addon" aria-describedby="button-addon1">
                         <input type="hidden" class="form-control" id="to-do-index">
@@ -60,10 +63,10 @@
                 <div class="col-md-6">
                 <div id="filter">
                     <h5>
-                        <select class="custom-select" id="filter-select">
-                            <option value="all">Todos</option>
-                            <option value="done">Feitos</option>
-                            <option value="to-do">A fazer</option>
+                        <select class="custom-select" id="filter-select" onchange="showTodo()">
+                            <option  value="all">Todos</option>
+                            <option  value="done">Feitos</option>
+                            <option  value="to-do">A fazer</option>
                         </select>
                     </h5>
                 </div>
