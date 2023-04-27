@@ -54,9 +54,9 @@ function showTodo(){
         todoList = JSON.parse(localStorage.todoList);
     }
     if (todoList.length > 0) {
-        todoList.forEach((todo) => {
+        todoList.forEach((todo, index) => {
             var done = todo.DONE ? " done" : ""; 
-            var todoDesc = "'" + todo.DESC + "'";
+            var todoIndex = "'" + 'Teste' + "'";
             todoListHtml += '<div class="to-do' + done + '" id="mainDiv">' +
                                 '<div class="row">' +
                                     '<div class="col-md-6">' +
@@ -66,13 +66,13 @@ function showTodo(){
                                     '</div>' +
                                 '<div class="col-md-2"></div>'+
                                     '<div class="col-md-4">' +
-                                        '<button class="btn btn-outline-success finish-to-do" onclick="toDone('+ todoDesc +')">' +
+                                        '<button class="btn btn-outline-success finish-to-do" onclick="toDone('+ todoIndex +')">' +
                                             '<i class="fa fa-check"></i>' +
                                         '</button>' +                
-                                        '<button class="btn btn-outline-primary edit-to-do" style="margin: 10px 5px 10px 5px;" onclick="toEdit('+ todoDesc +')"> ' +
+                                        '<button class="btn btn-outline-primary edit-to-do" style="margin: 10px 5px 10px 5px;" onclick="toEdit('+ todoIndex +')"> ' +
                                             '<i class="fa fa-edit"></i>' +
                                         '</button>' + 
-                                        '<button  class="btn btn-outline-danger remove-to-do" onclick="toDel('+ todoDesc +')">'+
+                                        '<button  class="btn btn-outline-danger remove-to-do" onclick="toDel('+ todoIndex +')">'+
                                             '<i class="fa fa-times"></i>'+
                                         '</button>'+
                                     '</div>' +
