@@ -25,6 +25,11 @@
 
   .done h5{
     color: #FFF;
-    text-decoration: line-through;
     font-style: italic;
+  }
+
+  .dateTodo{
+    font-size: 12px;
+    font-style: italic;
+    color: silver;
   }

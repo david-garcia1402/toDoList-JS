@@ -1,3 +1,8 @@
+function loadPage(){
+    prepareInsert();
+    showTodo();
+}
+
 function saveTodo(){
     var todoInput = document.getElementById("to-do-input").value;
     var todoIndex = document.getElementById("to-do-index").value;
@@ -36,33 +41,23 @@ function saveTodo(){
         if (!todoAdd) {          
           todoList.push({
             DESC: todoInput,
-            DONE: false
+            DONE: false,
+            DATE: ""
           });
         }
-        localStorage.todoList        = JSON.stringify(todoList);
-        document.getElementById("to-do-input").value = "";
-        document.getElementById("to-do-index").value = "";
-        showTodo();
-        
-        
-        
+        localStorage.todoList = JSON.stringify(todoList);
+        loadPage(); 
     }
-}
-
-//Função para a lista das tarefas (todo)
-function loadPage(){
-    document.getElementById("to-do-input").value = "";
-    document.getElementById("to-do-index").value = "";
-    document.getElementById("search").value = "";
-    document.getElementById("cancel-edit-btn").setAttribute("hidden", true);
-    showTodo()
 }
 
 function showTodo(){
     var todoListHtml = "";
     var todoList = [];
+    var count = 0;
+    var total = 0;
     if (localStorage.todoList) {
         todoList = JSON.parse(localStorage.todoList);
+        total = todoList.length;
     }
     if (todoList.length > 0) {
         var filter = document.getElementById("to-do-search").value;
@@ -79,16 +74,18 @@ function showTodo(){
             }
 
             if (todoShow) {
+                count += 1;
                 var done = todo.DONE ? " done" : ""; 
                 var todoIndex = "'" + index + "'";
+                var todoDate = todo.DONE ? " <span class='dateTodo'>("+ todo.DATE +")</span>" : ""; 
                 todoListHtml += '<div class="to-do' + done + '" id="' + index + '">' +
                                     '<div class="row">' +
-                                        '<div class="col-md-6">' +
+                                        '<div class="col-md-8">' +
                                             '<h5 class="m-3">' +
                                             todo.DESC +
+                                            todoDate +
                                             '</h5>' +
                                         '</div>' +
-                                    '<div class="col-md-2"></div>'+
                                         '<div class="col-md-4">' +
                                             '<button class="btn btn-outline-success finish-to-do" onclick="toDone('+ todoIndex +')">' +
                                                 '<i class="fa fa-check"></i>' +
@@ -107,12 +104,20 @@ function showTodo(){
     }
 
     if (todoListHtml == "") {
-        todoListHtml = '<div class="col-md-12">' +
+        todoListHtml = '<div class="col-md-12 text-center">' +
                             '<h5 class="m-3">' +
-                                'Nenhuma tarefa a exibir.' +
+                            '<div class="alert alert-danger alert-dismissible fade show" style="font-style: italic;" id="msg-alert">' +
+                                'Nenhuma tarefa a exibir!' +
+                            '</div>'; +
                             '</h5>' +
                         '</div>';
     }
+    html =  "<span style='font-size: 12px;'>" +
+                "Total de tarefas: "+
+                    count + "/" + total + 
+                "</span>";
+    
+    document.getElementById("todototal").innerHTML = html;
 
     document.getElementById("to-do-list").innerHTML = todoListHtml;
 }
@@ -125,9 +130,10 @@ function toDone(todoIndex){
     var todo = todoList[todoIndex];
     if(todo){
         todo.DONE = !todo.DONE;
+        todo.DATE = todo.DONE ? getDate() : ""; 
     }
     localStorage.todoList        = JSON.stringify(todoList);
-    showTodo();
+    loadPage();
 }
 
 function toDel(todoIndex){
@@ -136,17 +142,12 @@ function toDel(todoIndex){
         todoList = JSON.parse(localStorage.todoList);
     }
     todoList.splice(todoIndex, 1);
-
     localStorage.todoList = JSON.stringify(todoList);
-    showTodo();
+    loadPage();
 }
 
 function toEdit(todoIndex){
-    document.getElementById("to-do-list").setAttribute("hidden", true);
-    document.getElementById("toolbar").setAttribute("hidden", true);
-    document.getElementById("filter-select").setAttribute("hidden", true);
-    document.getElementById("hidden-button").removeAttribute("hidden");
-
+    showEditForm();
     var todoList = [];
     if (localStorage.todoList) {
         todoList = JSON.parse(localStorage.todoList);
@@ -158,24 +159,34 @@ function toEdit(todoIndex){
     }
 }
 
-function todoEditShow(){
-    document.getElementById("to-do-add").removeAttribute("hidden");
+function prepareInsert(){
+    document.getElementById("icoplus").setAttribute("class", "fa fa-plus");
+    document.getElementById("button-addon1").setAttribute("class", "btn btn-outline-success")
+    document.getElementById("cancel-edit-btn").setAttribute("hidden", true);
     document.getElementById("toolbar").removeAttribute("hidden");
     document.getElementById("filter-select").removeAttribute("hidden");
-    document.getElementById("search").removeAttribute("hidden");
     document.getElementById("to-do-list").removeAttribute("hidden");
-    document.getElementById("hidden-button").setAttribute("hidden", true);
+    document.getElementById("to-do-input").value = "";
+    document.getElementById("to-do-index").value = "";
+    document.getElementById("search").value = "";
 
 }
 
-function editAction(todoIndex){
-    var todoList = [];
-    var todo = todoList[todoIndex];
-    if (localStorage.todoList) {
-        todoList = JSON.parse(localStorage.todoList);
+function showEditForm(){
+    document.getElementById("cancel-edit-btn").removeAttribute("hidden");
+    document.getElementById("icoplus").setAttribute("class", "fa fa-edit");
+    document.getElementById("button-addon1").setAttribute("class", "btn btn-outline-primary")
+    document.getElementById("toolbar").setAttribute("hidden", true);
+    document.getElementById("filter-select").setAttribute("hidden", true);
+    document.getElementById("to-do-list").setAttribute("hidden", true);
+}
 
-    }
-
-    localStorage.todoList = JSON.stringify(todoList);
-    showTodo();
+function getDate(){
+    var data = new Date(),
+        dia  = data.getDate().toString(),
+        diaF = (dia.length == 1) ? '0'+dia : dia,
+        mes  = (data.getMonth()+1).toString(), //+1 pois no getMonth Janeiro começa com zero.
+        mesF = (mes.length == 1) ? '0'+mes : mes,
+        anoF = data.getFullYear();
+    return diaF+"/"+mesF+"/"+anoF;
 }
