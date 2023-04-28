@@ -1,10 +1,3 @@
-const todoForm = document.querySelector("#to-do-add");
-const todoFormInput = document.querySelector("#to-do-input");
-const todoEdit = document.querySelector("#edit-form");
-const todoEditInput = document.querySelector("#edit-input");
-const todoCancelEdit = document.querySelector("#cancel-edit-btn");
-const todoList = document.querySelector("#to-do-list");
-
 function saveTodo(){
     var todoInput = document.getElementById("to-do-input").value;
     var todoIndex = document.getElementById("to-do-index").value;
@@ -56,11 +49,16 @@ function saveTodo(){
     }
 }
 
-//Função para a lista das tarefas (todo) 
-function showTodo(){
+//Função para a lista das tarefas (todo)
+function loadPage(){
     document.getElementById("to-do-input").value = "";
-    document.getElementById("hidden-button").setAttribute("hidden", true);
-    document.getElementById("hidden-button-edit").setAttribute("hidden", true);
+    document.getElementById("to-do-index").value = "";
+    document.getElementById("search").value = "";
+    document.getElementById("cancel-edit-btn").setAttribute("hidden", true);
+    showTodo()
+}
+
+function showTodo(){
     var todoListHtml = "";
     var todoList = [];
     if (localStorage.todoList) {
@@ -70,27 +68,20 @@ function showTodo(){
         var filter = document.getElementById("to-do-search").value;
         var select = document.getElementById("filter-select").value;
         todoList.forEach((todo, index) => {
-            var todoadd = true;
-            if(filter){
-                let index = todo.DESC.toLocaleUpperCase().search(filter.toLocaleUpperCase());
-                if(index == -1){
-                    var message =   '<div class="alert alert-warning alert-dismissible fade show" id="msg-alert">' +
-                    '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
-                    "Tarefa <strong>inexistente</strong>!" +
-                    "</div>";
-                    document.getElementById("alert-list").innerHTML = message;
-                    $("#msg-alert")
-                    .fadeTo(2000, 500)
-                    .slideUp(500, function () {
-                      $("#msg-alert").slideUp(500);
-                    document.getElementById("to-do-search").value = "";
-                    });
-                    
-                }
-            if(todoadd){
+            var todoShow = true;
+            if (filter) {
+                let indexFilter = todo.DESC.toLocaleUpperCase().search(filter.toLocaleUpperCase());
+                todoShow = indexFilter >= 0;
+            }
+
+            if ((todoShow) && (select != "all")) {
+                todoShow = ((select == "to-do" && !todo.DONE) || (select == "done" && todo.DONE));
+            }
+
+            if (todoShow) {
                 var done = todo.DONE ? " done" : ""; 
                 var todoIndex = "'" + index + "'";
-                todoListHtml += '<div class="to-do' + done + '" id="mainDiv">' +
+                todoListHtml += '<div class="to-do' + done + '" id="' + index + '">' +
                                     '<div class="row">' +
                                         '<div class="col-md-6">' +
                                             '<h5 class="m-3">' +
@@ -111,95 +102,17 @@ function showTodo(){
                                         '</div>' +
                                     '</div>'+
                                 '</div>';   
-            }     
-                
-            }
-            if(select == "all"){
-                var filter = document.getElementById("to-do-search").value = "";
-                var done = todo.DONE ? " done" : ""; 
-                var todoIndex = "'" + index + "'";
-                todoListHtml += '<div class="to-do' + done + '" id="mainDiv">' +
-                                    '<div class="row">' +
-                                        '<div class="col-md-6">' +
-                                            '<h5 class="m-3">' +
-                                            todo.DESC +
-                                            '</h5>' +
-                                        '</div>' +
-                                    '<div class="col-md-2"></div>'+
-                                        '<div class="col-md-4">' +
-                                            '<button class="btn btn-outline-success finish-to-do" onclick="toDone('+ todoIndex +')">' +
-                                                '<i class="fa fa-check"></i>' +
-                                            '</button>' +                
-                                            '<button class="btn btn-outline-primary edit-to-do" style="margin: 10px 5px 10px 5px;" onclick="toEdit('+ todoIndex +')"> ' +
-                                                '<i class="fa fa-edit"></i>' +
-                                            '</button>' + 
-                                            '<button  class="btn btn-outline-danger remove-to-do" onclick="toDel('+ todoIndex +')">'+
-                                                '<i class="fa fa-times"></i>'+
-                                            '</button>'+
-                                        '</div>' +
-                                    '</div>'+
-                                '</div>';   
-            }
-            if(select == "done"){
-                var filter = document.getElementById("to-do-search").value = "";
-                var done = todo.DONE ? " done" : ""; 
-                var todoIndex = "'" + index + "'";
-                if(todo.DESC && todo.DONE == true){
-                        todoListHtml += '<div class="to-do' + done + '" id="mainDiv">' +
-                                            '<div class="row">' +
-                                                '<div class="col-md-6">' +
-                                                    '<h5 class="m-3">' +
-                                                    todo.DESC +
-                                                    '</h5>' +
-                                                '</div>' +
-                                            '<div class="col-md-2"></div>'+
-                                                '<div class="col-md-4">' +
-                                                    '<button class="btn btn-outline-success finish-to-do" onclick="toDone('+ todoIndex +')">' +
-                                                        '<i class="fa fa-check"></i>' +
-                                                    '</button>' +                
-                                                    '<button class="btn btn-outline-primary edit-to-do" style="margin: 10px 5px 10px 5px;" onclick="toEdit('+ todoIndex +')"> ' +
-                                                        '<i class="fa fa-edit"></i>' +
-                                                    '</button>' + 
-                                                    '<button  class="btn btn-outline-danger remove-to-do" onclick="toDel('+ todoIndex +')">'+
-                                                        '<i class="fa fa-times"></i>'+
-                                                    '</button>'+
-                                                '</div>' +
-                                            '</div>'+
-                                        '</div>';   
-                    
-                }
-            }    
-            if(select == "to-do"){
-                var filter = document.getElementById("to-do-search").value = "";
-                var done = todo.DONE ? " done" : ""; 
-                var todoIndex = "'" + index + "'";
-                if(todo.DESC && todo.DONE == false){
-                        todoListHtml += '<div class="to-do' + done + '" id="mainDiv">' +
-                                            '<div class="row">' +
-                                                '<div class="col-md-6">' +
-                                                    '<h5 class="m-3">' +
-                                                    todo.DESC +
-                                                    '</h5>' +
-                                                '</div>' +
-                                            '<div class="col-md-2"></div>'+
-                                                '<div class="col-md-4">' +
-                                                    '<button class="btn btn-outline-success finish-to-do" onclick="toDone('+ todoIndex +')">' +
-                                                        '<i class="fa fa-check"></i>' +
-                                                    '</button>' +                
-                                                    '<button class="btn btn-outline-primary edit-to-do" style="margin: 10px 5px 10px 5px;" onclick="toEdit('+ todoIndex +')"> ' +
-                                                        '<i class="fa fa-edit"></i>' +
-                                                    '</button>' + 
-                                                    '<button  class="btn btn-outline-danger remove-to-do" onclick="toDel('+ todoIndex +')">'+
-                                                        '<i class="fa fa-times"></i>'+
-                                                    '</button>'+
-                                                '</div>' +
-                                            '</div>'+
-                                        '</div>';   
-                    }
-                }
-            });
-        }
-    
+            }           
+        });
+    }
+
+    if (todoListHtml == "") {
+        todoListHtml = '<div class="col-md-12">' +
+                            '<h5 class="m-3">' +
+                                'Nenhuma tarefa a exibir.' +
+                            '</h5>' +
+                        '</div>';
+    }
 
     document.getElementById("to-do-list").innerHTML = todoListHtml;
 }
@@ -232,7 +145,6 @@ function toEdit(todoIndex){
     document.getElementById("to-do-list").setAttribute("hidden", true);
     document.getElementById("toolbar").setAttribute("hidden", true);
     document.getElementById("filter-select").setAttribute("hidden", true);
-    document.getElementById("hidden-button-edit").setAttribute("hidden", true);
     document.getElementById("hidden-button").removeAttribute("hidden");
 
     var todoList = [];

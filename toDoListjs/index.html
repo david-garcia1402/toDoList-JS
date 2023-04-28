@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/style.css">   
     <title>To Do List</title>
 </head>
-<body onload="showTodo()">
+<body onload="loadPage()">
 <main class="form-signin m-auto">
     <div class="card" style="width: 550px">
         <div class="card-body ">
@@ -25,25 +25,13 @@
                 <div class="input-group mb-4">
                     <div class="input-group-prepend">
                         <button class="btn btn-outline-success" type="button" id="button-addon1" title="Adicionar" onclick="saveTodo()"><i id=icoplus class="fa fa-plus"></i></button>
-                    <div id="hidden-button-edit">   
-                        <button class="btn btn-outline-primary" type="button" id="button-addon2" title="Adicionar" onclick="saveTodo()"><i id=icoplus class="fa fa-plus"></i></button>
-                    </div> 
                     </div>
                         <input type="text" class="form-control" placeholder="Adicionar tarefa" id="to-do-input" aria-label="Example text with button addon" aria-describedby="button-addon1">
                         <input type="hidden" class="form-control" id="to-do-index">
                     </div>
             </form>
             <div id="to-do-edit">
-            <!-- <form id="edit-form" hidden>
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-outline-primary" type="submit" id="button-addon1" title="Editar" onclick="editAction()"><i class="fa fa-edit"></i></button>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Editar tarefa " id="edit-input" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                </div> -->
-                <div id="hidden-button">
-                    <button class="btn btn-outline-danger mb-4 " type="button"  id="cancel-edit-btn" title="Cancelar" onclick="todoEditShow()">Cancelar edição</button>
-                </div>
+                <button class="btn btn-outline-danger mb-4 " type="button"  id="cancel-edit-btn" title="Cancelar" onclick="todoEditShow()">Cancelar edição</button>
             </div>
             <div class="row">
                 <div class="col-md-6">
@@ -73,27 +61,7 @@
                 </div>
             </div>
             <div id="alert-list"></div>
-                <div id="to-do-list">
-                    <!-- <div class="to-do done">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>Estudando javascript...</h5>
-                            </div>
-                            <div class="col-md-2"></div>
-                            <div class="col-md-4">
-                                <button class="btn btn-outline-success finish-to-do">
-                                    <i class="fa-solid fa-check"></i>
-                                </button>                
-                                <button class="btn btn-outline-primary edit-to-do">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>  
-                                <button  class="btn btn-outline-danger remove-to-do">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div> -->
-                </div>
+                <div id="to-do-list"></div>
             </div>
         </div>
     </main>
