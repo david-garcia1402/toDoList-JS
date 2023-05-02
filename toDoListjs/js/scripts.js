@@ -6,6 +6,7 @@ function loadPage(){
 function saveTodo(){
     var todoInput = document.getElementById("to-do-input").value;
     var todoIndex = document.getElementById("to-do-index").value;
+    var todoObs = document.getElementById("obs-to-do").value;
     document.getElementById("to-do-search").value = "";
     if(todoInput == ""){
         var message =   '<div class="alert alert-warning alert-dismissible fade show" id="msg-alert">' +
@@ -19,8 +20,8 @@ function saveTodo(){
           .slideUp(500, function () {
             $("#msg-alert").slideUp(500);
           });
-    }else{
 
+    }else{
         var todoList = [];
         if (localStorage.todoList) {
             todoList = JSON.parse(localStorage.todoList);
@@ -37,14 +38,20 @@ function saveTodo(){
             todo.DESC = todoInput;
             todoAdd   = true;
         }
+        if(todoObs == ""){
+            todoObs = "Sem observação."
+        }
 
         if (!todoAdd) {          
           todoList.push({
             DESC: todoInput,
             DONE: false,
-            DATE: ""
+            DATE: "",
+            OBS: todoObs
           });
         }
+
+
         localStorage.todoList = JSON.stringify(todoList);
         loadPage(); 
     }
@@ -78,12 +85,14 @@ function showTodo(){
                 var done = todo.DONE ? " done" : ""; 
                 var todoIndex = "'" + index + "'";
                 var todoDate = todo.DONE ? " <span class='dateTodo'>("+ todo.DATE +")</span>" : ""; 
+                var obs = todo.OBS
                 todoListHtml += '<div class="to-do' + done + '" id="' + index + '">' +
                                     '<div class="row">' +
                                         '<div class="col-md-8">' +
                                             '<h5 class="m-3">' +
                                             todo.DESC +
                                             todoDate +
+                                            '<span><i class="fa fa-eye" title="OBSERVAÇÃO: '+ obs +'" style="padding-left: 5px;"></i></span>'+
                                             '</h5>' +
                                         '</div>' +
                                         '<div class="col-md-4">' +
@@ -160,8 +169,9 @@ function toEdit(todoIndex){
 }
 
 function prepareInsert(){
+
     document.getElementById("icoplus").setAttribute("class", "fa fa-plus");
-    document.getElementById("button-addon1").setAttribute("class", "btn btn-outline-success")
+    document.getElementById("button-addon1").setAttribute("class", "btn btn-outline-success");
     document.getElementById("cancel-edit-btn").setAttribute("hidden", true);
     document.getElementById("toolbar").removeAttribute("hidden");
     document.getElementById("filter-select").removeAttribute("hidden");
@@ -169,6 +179,7 @@ function prepareInsert(){
     document.getElementById("to-do-input").value = "";
     document.getElementById("to-do-index").value = "";
     document.getElementById("search").value = "";
+    document.getElementById("obs-to-do").value = "";
 
 }
 
