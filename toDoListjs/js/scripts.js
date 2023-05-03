@@ -51,7 +51,6 @@ function saveTodo(){
           });
         }
 
-
         localStorage.todoList = JSON.stringify(todoList);
         loadPage(); 
     }
@@ -95,7 +94,7 @@ function showTodo(){
                                             '<span><i class="fa fa-eye" title="OBSERVAÇÃO: '+ obs +'" style="padding-left: 5px;"></i></span>'+
                                             '</h5>' +
                                         '</div>' +
-                                        '<div class="col-md-4">' +
+                                        '<div class="col-md-4 d-flex align-items-center">' +
                                             '<button class="btn btn-outline-success finish-to-do" onclick="toDone('+ todoIndex +')">' +
                                                 '<i class="fa fa-check"></i>' +
                                             '</button>' +                
